@@ -47,14 +47,14 @@ class StorageManager(private var app: Application) {
             MediaStore.Video.VideoColumns.SIZE
         )
 
-        var selection = "${MediaStore.Video.VideoColumns.RELATIVE_PATH} = ?"
-        var selectionArgs = arrayOf("DCIM/" + RECORDINGDS_FOLDER_NAME)
+        var selection = MediaStore.Video.VideoColumns.RELATIVE_PATH + " like ?"
+        var selectionArgs = arrayOf("%$RECORDINGDS_FOLDER_NAME%");
 
         var recordingsCursor = resolver.query(
             uri,
             projection,
-            null,
-            null,
+            selection,
+            selectionArgs,
             MediaStore.Video.VideoColumns.DATE_ADDED + " DESC",
             null
         )

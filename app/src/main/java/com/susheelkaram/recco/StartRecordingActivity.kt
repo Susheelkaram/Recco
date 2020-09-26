@@ -13,11 +13,12 @@ import com.susheelkaram.recco.recording.ScreenRecorder
 import com.susheelkaram.recco.recording.ScreenRecorderMode
 import com.susheelkaram.recco.util.toast
 import kotlinx.android.synthetic.main.fragment_home_screen.*
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 
 class StartRecordingActivity : AppCompatActivity() {
 
-    val screenRecorder: ScreenRecorder by inject()
+    lateinit var screenRecorder: ScreenRecorder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +26,7 @@ class StartRecordingActivity : AppCompatActivity() {
 
         var metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
+        screenRecorder = get()
         screenRecorder.apply {
             width = metrics.widthPixels
             height = metrics.heightPixels
@@ -73,7 +75,7 @@ class StartRecordingActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == ScreenRecorder.PROJECTION_REQUEST_CODE) {
+        if (requestCode == ScreenRecorder.PROJECTION_REQUEST_CODE) {
             screenRecorder.onActivityResult(requestCode, resultCode, data)
             finish()
         }

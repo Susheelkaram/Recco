@@ -50,8 +50,8 @@ class ScreenRecorder(private val app: Application) {
     private var virtualDisplay: VirtualDisplay? = null
     private var storageManager = StorageManager(app)
 
-    var width = 1280;
-    var height = 720;
+    var width = 720;
+    var height = 1280;
     var dpi = 100;
     var virtualDisplayName = "virtualRecordingDisplay"
 
@@ -124,14 +124,16 @@ class ScreenRecorder(private val app: Application) {
     }
 
     private fun prepareMediaRecorder() {
-        mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.DEFAULT)
-        mediaRecorder?.setVideoSource(MediaRecorder.VideoSource.SURFACE)
-        mediaRecorder?.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P))
-
-        var fileDescriptor: FileDescriptor? =
-            storageManager.createRecordingFile(Utils.buildFileName("Screen_recording_", ".mp4"))
-        mediaRecorder?.setOutputFile(fileDescriptor)
-        mediaRecorder?.prepare()
+        mediaRecorder?.apply {
+            setAudioSource(MediaRecorder.AudioSource.DEFAULT)
+            setVideoSource(MediaRecorder.VideoSource.SURFACE)
+            setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P))
+            setVideoSize(width, height)
+            var fileDescriptor: FileDescriptor? =
+                storageManager.createRecordingFile(Utils.buildFileName("Screen_recording_", ".mp4"))
+            setOutputFile(fileDescriptor)
+            prepare()
+        }
     }
 
     private fun startActualRecording(resultCode: Int, intent: Intent) {
@@ -139,7 +141,6 @@ class ScreenRecorder(private val app: Application) {
         prepareMediaRecorder()
         mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, intent)
         virtualDisplay = buildVirtualDisplay(mediaProjection as MediaProjection)
-        
 
         mediaRecorder?.start()
         listener?.onRecordingModeChanged(mode)

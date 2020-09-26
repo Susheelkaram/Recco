@@ -27,6 +27,7 @@ import java.util.jar.Manifest
 
 typealias onProjectionPermission = (resultCode: Int, data: Intent) -> Unit
 
+@Deprecated(message = "Logic split and moved to different fragment and activity")
 class HomeScreenFragment : Fragment(), View.OnClickListener {
 
     lateinit var screenRecorder: ScreenRecorder
